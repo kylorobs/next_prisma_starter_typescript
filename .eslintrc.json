@@ -1,0 +1,36 @@
+{
+  "extends": [
+    "wesbos/typescript",
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    "react/destructuring-assignment": 1,
+    "react/prop-types": 0,
+    "arrow-body-style": 0,
+    "no-console": 0,
+    "no-nested-ternary": 0,
+    "no-plusplus": 0,
+    "no-use-before-define": 0,
+    "no-return-assign": 0,
+    "import/no-mutable-exports": 0,
+    "@typescript-eslint/naming-convention": 0,
+    "vars-on-top": 0,
+    "no-var": 0,
+    "import/no-extraneous-dependencies": 0,
+    "no-unused-vars": [
+      1,
+      {
+        "argsIgnorePattern": "^_*|/res|next|^err/u"
+      }
+    ],
+    "prettier/prettier": [
+      1,
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 120,
+        "tabWidth": 4
+      }
+    ]
+  }
+}
