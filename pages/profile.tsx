@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 
-export default function Home() {
+export default function Profile() {
     const { data: session, status } = useSession();
     console.log('SESSION');
     console.log(session);

@@ -1,9 +1,13 @@
 // import Head from 'next/head'
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+import { getUser } from '../lib/data';
+import { prisma } from '../lib/prisma';
+import type { UserT } from '../types/prisma-extracted'
 
-export default function Home() {
+export default function Home({ userData }: { userData: UserT }) {
     const { data: session, status } = useSession();
     const router = useRouter();
 
@@ -12,7 +16,8 @@ export default function Home() {
     }
 
     if (session) {
-        router.push('/home');
+        console.log(userData)
+        router.push('/profile');
     }
     return (
         <Link href="/api/auth/signin">
@@ -20,3 +25,19 @@ export default function Home() {
         </Link>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context);
+    const { someParam } = context.params as { someParam: string };
+    console.log(someParam);
+
+    const userId = session?.user.id || '';
+
+    const user = await getUser(userId, prisma);
+
+    return {
+        props: {
+            user,
+        },
+    };
+};
