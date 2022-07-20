@@ -8,7 +8,6 @@ const fileParser = async (req: NextApiRequest, res: NextApiResponse, next: NextH
     console.log('PARSING FORM');
     const form = new multiparty.Form();
     const reqWithFiles = req as NextApiRequest & { files: string };
-    console.log(req);
 
     const parse = () => {
         return new Promise((resolve, reject) => {

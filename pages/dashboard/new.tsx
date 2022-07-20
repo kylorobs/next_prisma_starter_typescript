@@ -45,7 +45,7 @@ export default function NewProduct() {
                     className="mt-10"
                     onSubmit={async (e) => {
                         e.preventDefault();
-
+                        console.log({ image })
                         const body = new FormData();
                         body.append('image', image);
                         body.append('product', product);
@@ -54,19 +54,21 @@ export default function NewProduct() {
                         body.append('price', `${price}`);
                         body.append('description', description);
 
-                        await fetch('/api/new', {
+                        await fetch('/api/upload', {
                             body,
                             method: 'POST',
                         });
 
-                        router.push(`/dashboard`);
+                        console.log('UPLAODED!')
+
+                        // router.push(`/dashboard`);
                     }}
                 >
                     <div className="flex-1 mb-5">
                         <div className="flex-1 mb-2 text-white">Product title (required)</div>
                         <input
                             onChange={(e) => setTitle(e.target.value)}
-                            className="border p-1 text-white mb-4"
+                            className="border p-1  mb-4"
                             required
                         />
                         <div className="relative flex items-start mt-2 mb-3">
@@ -83,16 +85,16 @@ export default function NewProduct() {
                                 <input
                                     pattern="^\d*(\.\d{0,2})?$"
                                     onChange={(e) => setPrice(+(e.target.value))}
-                                    className="border p-1 text-white mb-4"
+                                    className="border p-1  mb-4"
                                     required
                                 />
                             </>
                         )}
                         <div className="flex-1 mb-2 text-white">Description</div>
-                        <textarea onChange={(e) => setDescription(e.target.value)} className="border p-1 text-white " />
+                        <textarea onChange={(e) => setDescription(e.target.value)} className="border p-1  " />
                     </div>
 
-                    <div className="text-sm text-white">
+                    <div className="text-sm ">
                         <label className="relative font-medium cursor-pointer  my-3 block">
                             <p className="text-white">Product image {image && '✅'}</p> (800 x 450 suggested)
                             <input

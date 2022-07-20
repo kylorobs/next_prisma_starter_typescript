@@ -31,6 +31,8 @@ const uploadFile = (filePath: fs.PathOrFileDescriptor, fileName: string, id: num
             if (err) {
                 reject(err);
             }
+            console.log('Successful upload');
+            console.log(data.Location);
             resolve(data.Location);
         });
     });
@@ -68,6 +70,7 @@ router.use(fileParser).post(async (req, res) => {
     let productLocation;
     let imageLocation;
     if (req?.files && req.files.product[0] && req.files.product[0].size > 0) {
+        console.log('UPLOADING PRODUCT');
         productLocation = await uploadFile(
             req.files.product[0].path,
             req.files.product[0].originalFilename,
@@ -76,6 +79,7 @@ router.use(fileParser).post(async (req, res) => {
     }
 
     if (req?.files && req.files.image[0] && req.files.image[0].size > 0) {
+        console.log('UPLOADING IMAGE');
         imageLocation = await uploadFile(
             req.files.image[0].path,
             req.files.image[0].originalFilename,
@@ -91,6 +95,9 @@ router.use(fileParser).post(async (req, res) => {
             price: string[];
         };
 
+        console.log('The Data!');
+        console.log({ title, description, price, free });
+
         await prisma.product.create({
             data: {
                 free: !!free[0],
@@ -104,9 +111,10 @@ router.use(fileParser).post(async (req, res) => {
                 },
             },
         });
+        res.status(200).json({ success: true });
     }
 
-    res.json({ success: true });
+    res.end();
 });
 
 const handler = router.handler({
