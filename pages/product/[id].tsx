@@ -1,12 +1,33 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { prisma } from '../../lib/prisma';
 import { getProduct } from '../../lib/data';
 import Heading from '../../components/Heading';
 import type { ProductAuthor } from '../../lib/data';
 
 export default function Product({ product }: { product: ProductAuthor }) {
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    async function handlePurchase() {
+        if (product.free) {
+            await fetch('/api/download', {
+                body: JSON.stringify({
+                    product_id: product.id,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            });
+
+            router.push('/dashboard');
+        }
+    }
+
     if (!product) {
         return null;
     }
@@ -33,11 +54,19 @@ export default function Product({ product }: { product: ProductAuthor }) {
                                 <p className="bg-black text-white w-fit px-1">${+product.price! / 100}</p>
                             )}
                         </div>
-                        <div className="">
-                            <button type="button" className="text-sm border p-2 font-bold uppercase">
-                                PURCHASE
-                            </button>
-                        </div>
+                        {!session && <p>Login first</p>}
+                        {session &&
+                            (session.user.id !== product.author.id ? (
+                                <button
+                                    onClick={handlePurchase}
+                                    type="button"
+                                    className="text-sm text-black border p-2 font-bold uppercase"
+                                >
+                                    {product.free ? 'DOWNLOAD' : 'PURCHASE'}
+                                </button>
+                            ) : (
+                                'Your product'
+                            ))}
                     </div>
                     <div className="mb-10">{product.description}</div>
                     <div className="mb-10">
